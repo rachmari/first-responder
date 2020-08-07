@@ -1,0 +1,49 @@
+{
+  "name": "javascript-action",
+  "version": "1.0.0",
+  "description": "JavaScript Action Template",
+  "main": "index.js",
+  "scripts": {
+    "lint": "standard",
+    "lint-fix": "standard --fix",
+    "build": "ncc build index.js",
+    "test": "npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actions/javascript-action.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
+  "author": "GitHub",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/actions/javascript-action/issues"
+  },
+  "homepage": "https://github.com/actions/javascript-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.1.1",
+    "@actions/github": "^2.2.0",
+    "@octokit/graphql": "^4.5.3"
+  },
+  "devDependencies": {
+    "@zeit/ncc": "^0.22.3",
+    "husky": "^4.2.5",
+    "standard": "^14.3.4"
+  },
+  "standard": {
+    "ignore": [
+      "dist/",
+      "tests/"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build && git add dist/",
+      "pre-push": "npm run lint"
+    }
+  }
+}

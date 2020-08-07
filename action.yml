@@ -1,0 +1,38 @@
+name: 'First responder'
+description: 'Catch team pings from issues and pull requests outside of your repository'
+inputs:
+  token:
+    description: 'An access token.'
+    required: true
+  team:  # id of input
+    description: 'Team name without the organization. For example: `docs-content-ecosystem`'
+    required: true
+  org: 
+    description: 'The organization to search for issues.'
+    required: true
+  since:
+    description: 'The start date to search for team pings. Forma: {4 digit year}-{month}-{day}. For example: 2020-5-20'
+    required: false
+    default: '2020-1-1'
+  project-board: 
+    description: 'The URL of the project board to place issues and pull requests. Must be an org project board.'
+    required: true
+  project-column:
+    description: 'The id of the column to add issues and pull requests.'
+    required: true
+  ignore-team:
+    description: 'Ignores issues and pull requests authored or commented on by members of this team. By default `team` is used for this value. You can use `ignore-team` to specify a larger team or a team that does not match the team ping being searched.'
+    required: false
+  ignore-repos: 
+    description: 'Repositories to ignore when searching issues and pull requests. You can add more than one repository by using a comma-separated list. Format: {owner}/{repo}. For example: octocat/hello-world'
+    required: false
+  ignore-bot:
+    description: 'Ignores issues and pull requests authored or commented on by this bot account.'
+    required: false
+  comment-body: 
+    description: 'A comment added to the issue or pull request.'
+    required: false
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
