@@ -11,7 +11,7 @@ inputs:
     description: 'The organization to search for issues.'
     required: true
   since:
-    description: 'The start date to search for team pings. Forma: {4 digit year}-{month}-{day}. For example: 2020-5-20'
+    description: 'The start date to search for team pings. Form: {4 digit year}-{month}-{day}. For example: 2020-5-20'
     required: false
     default: '2020-1-1'
   project-board: 

@@ -503,7 +503,7 @@ async function run () {
   const team = core.getInput('team')
   const org = core.getInput('org')
   const fullTeamName = `${org}/${team}`
-  const since = core.getInput('since')
+  const since = core.getInput('since') !== '' ? core.getInput('since') : '2020-01-01'
   const projectBoard = core.getInput('project-board')
   const columnId = parseInt(core.getInput('project-column'), 10)
   const ignoreTeam = core.getInput('ignore-team')
