@@ -7,7 +7,7 @@ This action searches for team pings in issues and pull requests in an organizati
 - `token`: **Required:** An access token.
 - `team`: **Required:** Name of the team whose @mentions you wannt to search for. Use the team name without the organization. For example: `docs-content-ecosystem`.
 - `org`: **Required:** The organization to search for issues.
-- `since`: The start date to search for team pings. Form: {4 digit year}-{month}-{day}. For example: 2020-5-20. Default: '2020-1-1'
+- `since`: The start date to search for team pings. Form: {4 digit year}-{month}-{day}. For example: '2020-5-20'. Default: '2020-1-1'
 - `project-board`: 'The URL of the project board to place issues and pull requests. Must be an org project board.
 - `project-column`: The id of the column to add issues and pull requests.'
 - `ignore-team`: Team whose members should respond to the `team` mentions. Issues and pull requests authored or commented on by members of this team are ignored. If you don't provide an `ignore-team`, the issues authored or commented on by members of `team` will be ignored. You can use `ignore-team` to specify a team with more members or a team that does not match the team ping being searched.
