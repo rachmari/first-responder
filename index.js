@@ -6,13 +6,15 @@ async function run () {
   const team = core.getInput('team')
   const org = core.getInput('org')
   const fullTeamName = `${org}/${team}`
-  const since = core.getInput('since') !== '' ? core.getInput('since') : '2020-01-01'
+  const since = core.getInput('since') !== ''
+    ? core.getInput('since') : '2020-01-01'
   const projectBoard = core.getInput('project-board')
   const columnId = parseInt(core.getInput('project-column'), 10)
   const ignoreTeam = core.getInput('ignore-team')
   const ignoreBot = core.getInput('ignore-bot')
   const body = core.getInput('comment-body')
-  const ignoreRepos = core.getInput('ignore-repos').split(',').map(x => x.trim())
+  const ignoreRepos = core.getInput('ignore-repos') !== ''
+    ? core.getInput('ignore-repos').split(',').map(x => x.trim()) : []
   const octokit = new GitHub(token)
 
   const projectInfo = await getProjectMetaData(projectBoard, org)
