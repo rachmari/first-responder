@@ -66,7 +66,7 @@ async function run () {
 async function getTeamPingIssues (octokit, org, team, members, since = '2019-01-01', projectBoard, ignoreRepos) {
   // Search for open issues in repositories owned by `org`
   // and includes a team mention to `team`
-  let query = `q=is%3Aopen+org%3A${org}+team%3A${team}`
+  let query = `per_page=100&q=is%3Aopen+org%3A${org}+team%3A${team}`
   for (const member of members) {
     query = query.concat(`+-commenter%3A${member}+-author%3A${member}`)
   }
