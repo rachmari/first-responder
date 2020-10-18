@@ -11,25 +11,31 @@ async function run () {
   const projectBoard = core.getInput('project-board')
   const columnId = parseInt(core.getInput('project-column'), 10)
   const ignoreTeam = core.getInput('ignore-team')
-  const ignoreBot = core.getInput('ignore-bot')
   const body = core.getInput('comment-body')
   const ignoreRepos = core.getInput('ignore-repos') !== ''
     ? core.getInput('ignore-repos').split(',').map(x => x.trim()) : []
+  const ignoreLabels = core.getInput('ignore-labels') !== ''
+    ? core.getInput('ignore-labels').split(',').map(x => x.trim()) : []
+  let ignoreAuthors = core.getInput('ignore-authors') !== ''
+    ? core.getInput('ignore-authors').split(',').map(x => x.trim()) : []
+  let ignoreCommenters = core.getInput('ignore-commenters') !== ''
+    ? core.getInput('ignore-commenters').split(',').map(x => x.trim()) : []
   const octokit = new GitHub(token)
 
   const projectInfo = await getProjectMetaData(projectBoard, org)
 
   // Create a list of users to ignore in the search query
-  let logins = ''
+  let teamMembers = ''
   if (ignoreTeam === '') {
-    logins = await getTeamLogins(octokit, org, team)
+    teamMembers = await getTeamLogins(octokit, org, team)
   } else {
-    logins = await getTeamLogins(octokit, org, ignoreTeam)
+    teamMembers = await getTeamLogins(octokit, org, ignoreTeam)
   }
-  if (ignoreBot !== '') logins.push(ignoreBot)
+  ignoreAuthors.push(teamMembers)
+  ignoreCommenters.push(teamMembers)
 
   // Assemble and run the issue/pull request search query
-  const issues = await getTeamPingIssues(octokit, org, fullTeamName, logins, since, projectInfo, ignoreRepos)
+  const issues = await getTeamPingIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
 
   if (issues.data.incomplete_results === false) {
     console.log('🌵🌵🌵 All search results were found. 🌵🌵🌵')
@@ -63,23 +69,31 @@ async function run () {
   return '🏁⛑'
 }
 
-async function getTeamPingIssues (octokit, org, team, members, since = '2019-01-01', projectBoard, ignoreRepos) {
+async function getTeamPingIssues (octokit, org, team, authors, commenters, since = '2019-01-01', projectBoard, ignoreRepos, ignoreLabels) {
   // Search for open issues in repositories owned by `org`
   // and includes a team mention to `team`
   let query = `per_page=100&q=is%3Aopen+org%3A${org}+team%3A${team}`
-  for (const member of members) {
-    query = query.concat(`+-commenter%3A${member}+-author%3A${member}`)
+  for (const author of authors) {
+    query = query.concat(`+-author%3A${author}`)
+  }
+  for (const commenter of commenters) {
+    query = query.concat(`+-commenter%3A${commenter}`)
   }
 
-  // Add the created since date query
-  query = query.concat(`+created%3A%3E${since}`)
+  // Add the updated since date query
+  query = query.concat(`+updated%3A%3E${since}`)
 
   // Add ignore repos query
   ignoreRepos.forEach(elem => {
     query = query.concat(`+-repo%3A${elem}`)
   })
 
-  // Ignore issues alrady on the project board
+  // Add ignore labels query
+  ignoreLabels.forEach(elem => {
+    query = query.concat(`+-label%3A${elem}`)
+  })
+
+  // Ignore issues already on the project board
   const ref = projectBoard.repo !== undefined
     ? `${projectBoard.owner}%2F${projectBoard.repo}` : projectBoard.owner
   query = query.concat(`+-project%3A${ref}%2F${projectBoard.number}`)

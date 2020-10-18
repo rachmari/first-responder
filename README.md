@@ -5,14 +5,15 @@ This action searches for team pings in issues and pull requests in an organizati
 # Input parameters
 
 - `token`: **Required:** An access token.
-- `team`: **Required:** Name of the team whose @mentions you wannt to search for. Use the team name without the organization. For example: `docs-content-ecosystem`.
-- `org`: **Required:** The organization to search for issues.
-- `since`: The start date to search for team pings. Form: {4 digit year}-{month}-{day}. For example: '2020-5-20'. Default: '2020-1-1'
+- `team`: **Required:** Team in the `org`, specified below. Do not include the org name (for example, `docs-content-ecosystem`). Issues and pull requests authored or commented on by members of `team` are ignored unless you specify an alternate `ignore-team` parameter.
+- `org`: **Required:** The organization where the action should search for issues and pull requests.
+- `since`: The start date to search for team pings. The action searches for activity that has occurred in an issue or pull request since the date specified. Form: {4 digit year}-{month}-{day}. For example: '2020-5-20'
 - `project-board`: 'The URL of the project board to place issues and pull requests. Must be an org project board.
 - `project-column`: The id of the column to add issues and pull requests.'
-- `ignore-team`: Team whose members should respond to the `team` mentions. Issues and pull requests authored or commented on by members of this team are ignored. If you don't provide an `ignore-team`, the issues authored or commented on by members of `team` will be ignored. For example, you can use `ignore-team` to specify a team with more members than `team` or a team that includes only reviewers.
+- `ignore-team`: Ignores issues and pull requests authored or commented on by members of this team. Issues and pull requests authored or commented on by members of `team` are ignored unless you specify an alternate `ignore-team` parameter. You can use `ignore-team` to specify a larger team or a team that does not match the team ping being searched. The value you specify for `ignore-team` overrides the `team` value.
 - `ignore-repos`: Repositories to ignore when searching issues and pull requests. You can add more than one repository by using a comma-separated list. Format: {owner}/{repo}. For example: octocat/hello-world
-- `ignore-bot`: Ignores issues and pull requests authored or commented on by this bot account.
+- `ignore-authors`: Ignores issues and pull requests authored by these accounts. You can add more than one repository by using a comma-separated list (for example, 'actions-bot, hubot')
+- `ignore-commenters`: Ignores issues and pull requests commented by thee accounts. You can add more than one repository by using a comma-separated list (for example, 'actions-bot, hubot')
 - `comment-body`: A comment added to the issue or pull request.
 
 ## `token`
