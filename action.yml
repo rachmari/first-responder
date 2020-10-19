@@ -5,7 +5,7 @@ inputs:
     description: 'An access token.'
     required: true
   team:  # id of input
-    description: 'Team in the `org`, specified below. Do not include the org name (for example, `docs-content-ecosystem`). Issues and pull requests authored or commented on by members of `team` are ignored unless you specify an alternate `ignore-team` parameter.' 
+    description: 'The team ping to search for that is part of the `org` specified below. Do not include the org name (for example, use `docs-content-ecosystem`). Issues and pull requests authored or commented on by members of `team` are ignored unless you specify an alternate `ignore-team` parameter.' 
     required: true
   org: 
     description: 'The organization where the action should search for issues and pull requests.'

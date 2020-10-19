@@ -5,7 +5,7 @@ This action searches for team pings in issues and pull requests in an organizati
 # Input parameters
 
 - `token`: **Required:** An access token.
-- `team`: **Required:** Team in the `org`, specified below. Do not include the org name (for example, `docs-content-ecosystem`). Issues and pull requests authored or commented on by members of `team` are ignored unless you specify an alternate `ignore-team` parameter.
+- `team`: **Required:** The team ping to search for that is part of the `org` specified below. Do not include the org name (for example, use `docs-content-ecosystem`). Issues and pull requests authored or commented on by members of `team` are ignored unless you specify an alternate `ignore-team` parameter.
 - `org`: **Required:** The organization where the action should search for issues and pull requests.
 - `since`: The start date to search for team pings. The action searches for activity that has occurred in an issue or pull request since the date specified. Form: {4 digit year}-{month}-{day}. For example: '2020-5-20'
 - `project-board`: 'The URL of the project board to place issues and pull requests. Must be an org project board.
