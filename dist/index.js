@@ -577,8 +577,8 @@ async function getTeamPingIssues (octokit, org, team, authors, commenters, since
     query = query.concat(`+-commenter%3A${commenter}`)
   }
 
-  // Add the updated since date query
-  query = query.concat(`+updated%3A%3E${since}`)
+  // Add the created since date query
+  query = query.concat(`+created%3A%3E${since}`)
 
   // Add ignore repos query
   ignoreRepos.forEach(elem => {

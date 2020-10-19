@@ -11,7 +11,7 @@ inputs:
     description: 'The organization where the action should search for issues and pull requests.'
     required: true
   since:
-    description: 'The start date to search for team pings. The action searches for activity that has occurred in an issue or pull request since the date specified. Form: {4 digit year}-{month}-{day}. For example: "2020-5-20"'
+    description: 'The start date to search for team pings. The action searches for issues or pull requests created since the date specified. Form: {4 digit year}-{month}-{day}. For example: "2020-5-20"'
     required: false
     default: '2020-1-1'
   project-board: 
