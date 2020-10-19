@@ -16,9 +16,9 @@ async function run () {
     ? core.getInput('ignore-repos').split(',').map(x => x.trim()) : []
   const ignoreLabels = core.getInput('ignore-labels') !== ''
     ? core.getInput('ignore-labels').split(',').map(x => x.trim()) : []
-  const ignoreAuthors = core.getInput('ignore-authors') !== ''
+  let ignoreAuthors = core.getInput('ignore-authors') !== ''
     ? core.getInput('ignore-authors').split(',').map(x => x.trim()) : []
-  const ignoreCommenters = core.getInput('ignore-commenters') !== ''
+  let ignoreCommenters = core.getInput('ignore-commenters') !== ''
     ? core.getInput('ignore-commenters').split(',').map(x => x.trim()) : []
   const octokit = new GitHub(token)
 
