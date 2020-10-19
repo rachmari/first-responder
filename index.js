@@ -25,14 +25,14 @@ async function run () {
   const projectInfo = await getProjectMetaData(projectBoard, org)
 
   // Create a list of users to ignore in the search query
-  let teamMembers = ''
+  let teamMembers = []
   if (ignoreTeam === '') {
     teamMembers = await getTeamLogins(octokit, org, team)
   } else {
     teamMembers = await getTeamLogins(octokit, org, ignoreTeam)
   }
-  ignoreAuthors.push(teamMembers)
-  ignoreCommenters.push(teamMembers)
+  ignoreAuthors = ignoreAuthors.concat(teamMembers)
+  ignoreCommenters = ignoreCommenters.concat(teamMembers)
 
   // Assemble and run the issue/pull request search query
   const issues = await getTeamPingIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
