@@ -35,15 +35,17 @@ async function run () {
   ignoreCommenters = ignoreCommenters.concat(teamMembers)
 
   // Assemble and run the issue/pull request search query
-  const issues = await getTeamPingIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
+  const teamMentions = await getTeamMentionsIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
+  const teamReviewRequests = await getTeamReviewRequests(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
 
-  if (issues.data.incomplete_results === false) {
+  if (teamMentions.data.incomplete_results === false &&
+      teamReviewRequests.data.incomplete_results === false) {
     console.log('🌵🌵🌵 All search results were found. 🌵🌵🌵')
   } else {
     console.log('🐢 The search result indicated that results may not be complete. This doesn\'t necessarily mean that all results weren\'t returned. See https://docs.github.com/en/rest/reference/search#timeouts-and-incomplete-results for details.')
   }
 
-  if (issues.data.items.length === 0) {
+  if (issues.length === 0) {
     return 'No new team pings. 💫🦄🌈🦩✨'
   }
 
@@ -69,10 +71,30 @@ async function run () {
   return '🏁⛑'
 }
 
-async function getTeamPingIssues (octokit, org, team, authors, commenters, since = '2019-01-01', projectBoard, ignoreRepos, ignoreLabels) {
+async function getTeamMentionsIssues (octokit, org, team, authors, commenters, since, projectBoard, ignoreRepos, ignoreLabels) {
   // Search for open issues in repositories owned by `org`
   // and includes a team mention to `team`
   let query = `per_page=100&q=is%3Aopen+org%3A${org}+team%3A${team}`
+  
+  query = query.concat(await buildExceptions(authors, commenters, since, projectBoard, ignoreRepos, ignoreLabels))
+
+  console.log(`🔎 Searh query 🔎 ${query}`)
+  return await octokit.request(`GET /search/issues?${query}`)
+}
+
+async function getTeamReviewRequests (octokit, org, team, authors, commenters, since, projectBoard, ignoreRepos, ignoreLabels) {
+  // Search for open issues in repositories owned by `org`
+  // and includes a team mention to `team`
+  let query = `per_page=100&q=is%3Aopen+org%3A${org}+team-review-requested%3A${team}`
+  
+  query = query.concat(await buildExceptions(authors, commenters, since, projectBoard, ignoreRepos, ignoreLabels))
+
+  console.log(`🔎 Searh query 🔎 ${query}`)
+  return await octokit.request(`GET /search/issues?${query}`)
+}
+
+async function buildExceptions (authors, commenters, since = '2019-01-01', projectBoard, ignoreRepos, ignoreLabels) {
+  let query = ""
   for (const author of authors) {
     query = query.concat(`+-author%3A${author}`)
   }
@@ -97,9 +119,8 @@ async function getTeamPingIssues (octokit, org, team, authors, commenters, since
   const ref = projectBoard.repo !== undefined
     ? `${projectBoard.owner}%2F${projectBoard.repo}` : projectBoard.owner
   query = query.concat(`+-project%3A${ref}%2F${projectBoard.number}`)
-
-  console.log(`🔎 Searh query 🔎 ${query}`)
-  return await octokit.request(`GET /search/issues?${query}`)
+  
+  return query
 }
 
 async function getProjectMetaData (projectUrl, org) {
