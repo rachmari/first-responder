@@ -11,6 +11,7 @@ async function run () {
   const projectBoard = core.getInput('project-board')
   const columnId = parseInt(core.getInput('project-column'), 10)
   const ignoreTeam = core.getInput('ignore-team')
+  const includeReviewRequests = core.getInput('include-review-requests')
   const body = core.getInput('comment-body')
   const ignoreRepos = core.getInput('ignore-repos') !== ''
     ? core.getInput('ignore-repos').split(',').map(x => x.trim()) : []
@@ -36,10 +37,11 @@ async function run () {
 
   // Assemble and run the issue/pull request search query
   const teamMentions = await getTeamMentionsIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
-  const teamReviewRequests = await getTeamReviewRequests(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
+  if (includeReviewRequests === true) {
+    const teamReviewRequests = await getTeamReviewRequests(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
+  }
 
-  if (teamMentions.data.incomplete_results === false &&
-      teamReviewRequests.data.incomplete_results === false) {
+  if (teamMentions.data.incomplete_results === false) {
     console.log('🌵🌵🌵 All search results were found. 🌵🌵🌵')
   } else {
     console.log('🐢 The search result indicated that results may not be complete. This doesn\'t necessarily mean that all results weren\'t returned. See https://docs.github.com/en/rest/reference/search#timeouts-and-incomplete-results for details.')
@@ -47,12 +49,16 @@ async function run () {
 
   // Get unique issues from the 2 results and combine them into single array
   let issues = {}
-  teamMentions.data.items.concat(teamReviewRequests.data.items).forEach( i => {
-    // easy way to ensure uniq by key => val all the id
-    issues[i.id] = i
-  })
-  // convert Object to Array
-  issues = Object.values(issues)
+  if (includeReviewRequests === true) {
+    teamMentions.data.items.concat(teamReviewRequests.data.items).forEach( i => {
+      // easy way to ensure uniq by key => val all the id
+      issues[i.id] = i
+    })
+    // convert Object to Array
+    issues = Object.values(issues)
+  } else {
+    issues = teamMentions.data.items
+  }
 
   if (issues.length === 0) {
     return 'No new team pings. 💫🦄🌈🦩✨'
