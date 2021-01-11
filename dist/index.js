@@ -534,8 +534,9 @@ async function run () {
 
   // Assemble and run the issue/pull request search query
   const teamMentions = await getTeamMentionsIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
+  let teamReviewRequests = null
   if (includeReviewRequests === 'true') {
-    const teamReviewRequests = await getTeamReviewRequests(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
+    teamReviewRequests = await getTeamReviewRequests(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
   }
 
   if (teamMentions.data.incomplete_results === false) {
@@ -547,7 +548,7 @@ async function run () {
   // Get unique issues from the 2 results and combine them into single array
   let issues = {}
   if (includeReviewRequests === 'true') {
-    teamMentions.data.items.concat(teamReviewRequests.data.items).forEach( i => {
+    teamMentions.data.items.concat(includeReviewRequests === 'true' ? teamReviewRequests.data.items : []).forEach( i => {
       // easy way to ensure uniq by key => val all the id
       issues[i.id] = i
     })
