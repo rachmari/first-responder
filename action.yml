@@ -35,6 +35,9 @@ inputs:
   ignore-labels:
     description: 'Ignores issues and pull requests with specific labels. You can add more than one label by using a comma-separated list (for example, "space-2x, autogen")'
     required: false
+  include-review-requests:
+    description: 'If you want to include any requests for review for the team.'
+    required: false
   comment-body: 
     description: 'A comment added to the issue or pull request.'
     required: false
