@@ -34,10 +34,10 @@ async function run () {
   }
   ignoreAuthors = ignoreAuthors.concat(teamMembers)
   ignoreCommenters = ignoreCommenters.concat(teamMembers)
-
+  console.log("includeReviewRequests", includeReviewRequests)
   // Assemble and run the issue/pull request search query
   const teamMentions = await getTeamMentionsIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
-  if (includeReviewRequests === 'true') {
+  if (includeReviewRequests == 'true') {
     const teamReviewRequests = await getTeamReviewRequests(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
   }
 
@@ -49,7 +49,7 @@ async function run () {
 
   // Get unique issues from the 2 results and combine them into single array
   let issues = {}
-  if (includeReviewRequests === 'true') {
+  if (includeReviewRequests == 'true') {
     teamMentions.data.items.concat(teamReviewRequests.data.items).forEach( i => {
       // easy way to ensure uniq by key => val all the id
       issues[i.id] = i
