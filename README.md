@@ -15,24 +15,25 @@ This action searches for team pings in issues and pull requests in an organizati
 - `ignore-authors`: Ignores issues and pull requests authored by these accounts. You can add more than one repository by using a comma-separated list (for example, 'actions-bot, hubot')
 - `ignore-commenters`: Ignores issues and pull requests commented by thee accounts. You can add more than one repository by using a comma-separated list (for example, 'actions-bot, hubot')
 - `comment-body`: A comment added to the issue or pull request.
+- `include-review-requests`: true or false, if you want to include any requests for review for the `team` .
 
 ## `token`
 
 To read and write organization project boards, you need to use an access token with `repo` and `write:org` access. Ensure that you add the user that owns the access token to the project board with admin permission. For help creating an access token or managing project board members see the GitHub docs:
 - [Creating a personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token#creating-a-token)
-- [Managing team access to an organization project board](https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-team-access-to-an-organization-project-board) 
+- [Managing team access to an organization project board](https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-team-access-to-an-organization-project-board)
 - [Managing an individual's acces to an organization project board](https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-an-individuals-access-to-an-organization-project-board)
 
 
 ## Example workflow
 
-This workflow includes two team pings and runs every hour and can also be run manually. 
+This workflow includes two team pings and runs every hour and can also be run manually.
 
 ```yml
 name: First responder triage
 on:
   workflow_dispatch:
-  schedule:	
+  schedule:
     - cron:  '0 * * * *'
 
 jobs:
@@ -73,5 +74,5 @@ jobs:
         ignore-authors: 'sprocketbot, github-actions'
         ignore-commenters: 'sprocketbot'
         comment-body: ':robot: Thanks for the ping to team sprockets! :bellhop_bell: This issue was added to our first-responder project board. A team member will be along shortly to review this issue.'
-  
+
 ```
