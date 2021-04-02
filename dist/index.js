@@ -525,7 +525,7 @@ async function run () {
 
   // Only include-repos OR ignore-repos can be passed in but not both.
   if (includeRepos.length > 0 && ignoreRepos.length > 0) {
-    throw new Error(`Pass either include-repos or ignore-repos as an option but not both.`)
+    throw new Error('Pass either include-repos or ignore-repos as an option but not both.')
   }
 
   // Create a list of users to ignore in the search query
