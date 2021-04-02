@@ -12,6 +12,8 @@ async function run () {
   const columnId = parseInt(core.getInput('project-column'), 10)
   const ignoreTeam = core.getInput('ignore-team')
   const body = core.getInput('comment-body')
+  const includeRepos = core.getInput('include-repos') !== ''
+    ? core.getInput('include-repos').split(',').map(x => x.trim()) : []
   const ignoreRepos = core.getInput('ignore-repos') !== ''
     ? core.getInput('ignore-repos').split(',').map(x => x.trim()) : []
   const ignoreLabels = core.getInput('ignore-labels') !== ''
@@ -24,6 +26,11 @@ async function run () {
 
   const projectInfo = await getProjectMetaData(projectBoard, org)
 
+  // Only include-repos OR ignore-repos can be passed in but not both.
+  if (includeRepos.length > 0 && ignoreRepos.length > 0) {
+    throw new Error('Pass either include-repos or ignore-repos as an option but not both.')
+  }
+
   // Create a list of users to ignore in the search query
   let teamMembers = []
   if (ignoreTeam === '') {
@@ -35,7 +42,7 @@ async function run () {
   ignoreCommenters = ignoreCommenters.concat(teamMembers)
 
   // Assemble and run the issue/pull request search query
-  const issues = await getTeamPingIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, ignoreRepos, ignoreLabels)
+  const issues = await getTeamPingIssues(octokit, org, fullTeamName, ignoreAuthors, ignoreCommenters, since, projectInfo, includeRepos, ignoreRepos, ignoreLabels)
 
   if (issues.data.incomplete_results === false) {
     console.log('🌵🌵🌵 All search results were found. 🌵🌵🌵')
@@ -69,7 +76,7 @@ async function run () {
   return '🏁⛑'
 }
 
-async function getTeamPingIssues (octokit, org, team, authors, commenters, since = '2019-01-01', projectBoard, ignoreRepos, ignoreLabels) {
+async function getTeamPingIssues (octokit, org, team, authors, commenters, since = '2019-01-01', projectBoard, includeRepos, ignoreRepos, ignoreLabels) {
   // Search for open issues in repositories owned by `org`
   // and includes a team mention to `team`
   let query = `per_page=100&q=is%3Aopen+org%3A${org}+team%3A${team}`
@@ -83,10 +90,17 @@ async function getTeamPingIssues (octokit, org, team, authors, commenters, since
   // Add the created since date query
   query = query.concat(`+created%3A%3E${since}`)
 
-  // Add ignore repos query
-  ignoreRepos.forEach(elem => {
-    query = query.concat(`+-repo%3A${elem}`)
-  })
+  if (includeRepos.length > 0) {
+    // Add include repos query
+    includeRepos.forEach(elem => {
+      query = query.concat(`+repo%3A${elem}`)
+    })
+  } else if (ignoreRepos.length > 0) {
+    // Add ignore repos query
+    ignoreRepos.forEach(elem => {
+      query = query.concat(`+-repo%3A${elem}`)
+    })
+  }
 
   // Add ignore labels query
   ignoreLabels.forEach(elem => {
