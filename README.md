@@ -70,7 +70,7 @@ jobs:
         since: '2020-08-05'
         project-board: 'https://github.com/orgs/spacelysprocketsinc/projects/1'
         project-column: 10
-        include-repos: 'spacelysprocketsinc/product-spacely, spacelysprocketsinc/product-spacely-sprockets'
+        ignore-repos: 'spacelysprocketsinc/product-spacely, spacelysprocketsinc/product-spacely-sprockets'
         ignore-authors: 'sprocketbot, github-actions'
         ignore-commenters: 'sprocketbot'
         comment-body: ':robot: Thanks for the ping to team sprockets! :bellhop_bell: This issue was added to our first-responder project board. A team member will be along shortly to review this issue.'
