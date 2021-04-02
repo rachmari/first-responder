@@ -22,7 +22,7 @@ This action searches for team pings in issues and pull requests in an organizati
 To read and write organization project boards, you need to use an access token with `repo` and `write:org` access. Ensure that you add the user that owns the access token to the project board with admin permission. For help creating an access token or managing project board members see the GitHub docs:
 - [Creating a personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token#creating-a-token)
 - [Managing team access to an organization project board](https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-team-access-to-an-organization-project-board)
-- [Managing an individual's acces to an organization project board](https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-an-individuals-access-to-an-organization-project-board)
+- [Managing an individual's access to an organization project board](https://docs.github.com/en/github/setting-up-and-managing-organizations-and-teams/managing-an-individuals-access-to-an-organization-project-board)
 
 
 ## Example workflow
