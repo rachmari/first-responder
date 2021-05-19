@@ -77,9 +77,9 @@ async function run () {
 }
 
 async function getTeamPingIssues (octokit, org, team, authors, commenters, since = '2019-01-01', projectBoard, includeRepos, ignoreRepos, ignoreLabels) {
-  // Search for open issues in repositories owned by `org`
-  // and includes a team mention to `team`
-  let query = `per_page=100&q=is%3Aopen+org%3A${org}+team%3A${team}`
+  // Search for open issues including a team mention to `team`
+  let query = `per_page=100&q=is%3Aopen+team%3A${team}`
+
   for (const author of authors) {
     query = query.concat(`+-author%3A${author}`)
   }
@@ -95,11 +95,17 @@ async function getTeamPingIssues (octokit, org, team, authors, commenters, since
     includeRepos.forEach(elem => {
       query = query.concat(`+repo%3A${elem}`)
     })
-  } else if (ignoreRepos.length > 0) {
+  } else {
+    // Limit repos to those in org
+    query.concat(`+org%3A${org}`)
+
     // Add ignore repos query
-    ignoreRepos.forEach(elem => {
-      query = query.concat(`+-repo%3A${elem}`)
-    })
+    if (ignoreRepos.length > 0) {
+      // Add ignore repos query
+      ignoreRepos.forEach(elem => {
+        query = query.concat(`+-repo%3A${elem}`)
+      })
+    }
   }
 
   // Add ignore labels query
