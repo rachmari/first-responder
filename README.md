@@ -76,3 +76,7 @@ jobs:
         comment-body: ':robot: Thanks for the ping to team sprockets! :bellhop_bell: This issue was added to our first-responder project board. A team member will be along shortly to review this issue.'
 
 ```
+
+# Would you like to contribute?
+
+To get started read the [Contributing](./CONTRIBUTING.md) docs.
