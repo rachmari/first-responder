@@ -97,7 +97,7 @@ async function getTeamPingIssues (octokit, org, team, authors, commenters, since
     })
   } else {
     // Limit repos to those in org
-    query.concat(`+org%3A${org}`)
+    query = query.concat(`+org%3A${org}`)
 
     // Add ignore repos query
     if (ignoreRepos.length > 0) {
