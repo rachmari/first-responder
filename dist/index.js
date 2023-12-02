@@ -521,7 +521,7 @@ async function run () {
     ? core.getInput('ignore-commenters').split(',').map(x => x.trim()) : []
   const octokit = new GitHub(token)
 
-  const projectInfo = projectBoard ? await getProjectMetaData(projectBoard, org) : undefined;
+  const projectInfo = projectBoard ? await getProjectMetaData(projectBoard, org) : undefined
 
   // Only include-repos OR ignore-repos can be passed in but not both.
   if (includeRepos.length > 0 && ignoreRepos.length > 0) {
@@ -555,7 +555,7 @@ async function run () {
   console.log(`🚨 Search query found ${issues.data.items.length} issues and prs. 🚨`)
 
   if (columnId && projectBoard) {
-    console.log("Adding items to project board...")
+    console.log('Adding items to project board...')
     for (const issue of issues.data.items) {
       let [, , , owner, repo, contentType, number] = issue.html_url.split('/')
       contentType = contentType === 'issues' ? 'Issue' : 'PullRequest'
@@ -564,9 +564,9 @@ async function run () {
   }
 
   if (body !== '') {
-    console.log("Commenting on each issue...")
+    console.log('Commenting on each issue...')
     for (const issue of issues.data.items) {
-      let [, , , owner, repo, contentType, number] = issue.html_url.split('/')
+      const [, , , owner, repo, , number] = issue.html_url.split('/')
       const comment = await octokit.issues.createComment({
         issue_number: number,
         owner: owner,
@@ -581,11 +581,11 @@ async function run () {
 
   // todo revert comment/hardcoded
   // const urls = issues.data.items.map(i=>i.html_url)
-  const urls = ["https://github.com/github/docs-content/issues/12995","https://github.com/github/docs-content/issues/12996"]
+  const urls = ['https://github.com/github/docs-content/issues/12995', 'https://github.com/github/docs-content/issues/12996']
 
-  console.log("Items found: " + urls);
+  console.log('Items found: ' + urls)
 
-  core.setOutput('foundURLs', JSON.stringify(urls));
+  core.setOutput('foundURLs', JSON.stringify(urls))
 }
 
 async function getTeamPingIssues (octokit, org, team, authors, commenters, since = '2019-01-01', projectBoard, includeRepos, ignoreRepos, ignoreLabels) {
