@@ -1,6 +1,6 @@
 # First responder
 
-This action searches for team pings in issues and pull requests in an organization and outputs the URL of any items that were found.
+This action searches for team pings in issues and pull requests in an organization and outputs a JSON stringified list of the URLs of any items that were found.
 
 If you specify an organization project board, the items will also be added to the board. This only works for projects classic, not for projects v2.
 
