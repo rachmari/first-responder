@@ -25,12 +25,12 @@
   },
   "homepage": "https://github.com/actions/javascript-action#readme",
   "dependencies": {
-    "@actions/core": "^1.1.1",
+    "@actions/core": "^1.10.0",
     "@actions/github": "^2.2.0",
     "@octokit/graphql": "^4.5.3"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.22.3",
+    "@vercel/ncc": "^0.38.1",
     "husky": "^4.2.5",
     "standard": "^14.3.4"
   },
