@@ -24,7 +24,7 @@ async function run () {
     ? core.getInput('ignore-commenters').split(',').map(x => x.trim()) : []
   const octokit = new GitHub(token)
 
-  const projectInfo = await getProjectMetaData(projectBoard, org)
+  const projectInfo = projectBoard ? await getProjectMetaData(projectBoard, org) : undefined;
 
   // Only include-repos OR ignore-repos can be passed in but not both.
   if (includeRepos.length > 0 && ignoreRepos.length > 0) {
@@ -51,17 +51,25 @@ async function run () {
   }
 
   if (issues.data.items.length === 0) {
-    return 'No new team pings. 💫🦄🌈🦩✨'
+    // todo uncomment
+    // return 'No new team pings. 💫🦄🌈🦩✨'
   }
 
   console.log(`🚨 Search query found ${issues.data.items.length} issues and prs. 🚨`)
 
-  for (const issue of issues.data.items) {
-    let [, , , owner, repo, contentType, number] = issue.html_url.split('/')
-    contentType = contentType === 'issues' ? 'Issue' : 'PullRequest'
-    await addProjectCard(octokit, owner, repo, number, contentType, columnId)
+  if (columnId && projectBoard) {
+    console.log("Adding items to project board...")
+    for (const issue of issues.data.items) {
+      let [, , , owner, repo, contentType, number] = issue.html_url.split('/')
+      contentType = contentType === 'issues' ? 'Issue' : 'PullRequest'
+      await addProjectCard(octokit, owner, repo, number, contentType, columnId)
+    }
+  }
 
-    if (body !== '') {
+  if (body !== '') {
+    console.log("Commenting on each issue...")
+    for (const issue of issues.data.items) {
+      let [, , , owner, repo, contentType, number] = issue.html_url.split('/')
       const comment = await octokit.issues.createComment({
         issue_number: number,
         owner: owner,
@@ -73,7 +81,14 @@ async function run () {
       }
     }
   }
-  return '🏁⛑'
+
+  // todo revert comment/hardcoded
+  // const urls = issues.data.items.map(i=>i.html_url)
+  const urls = ["https://github.com/github/docs-content/issues/12995","https://github.com/github/docs-content/issues/12996"]
+
+  console.log("Items found: " + urls);
+
+  core.setOutput('foundURLs', JSON.stringify(urls));
 }
 
 async function getTeamPingIssues (octokit, org, team, authors, commenters, since = '2019-01-01', projectBoard, includeRepos, ignoreRepos, ignoreLabels) {
@@ -107,10 +122,12 @@ async function getTeamPingIssues (octokit, org, team, authors, commenters, since
     query = query.concat(`+-label%3A${elem}`)
   })
 
-  // Ignore issues already on the project board
-  const ref = projectBoard.repo !== undefined
-    ? `${projectBoard.owner}%2F${projectBoard.repo}` : projectBoard.owner
-  query = query.concat(`+-project%3A${ref}%2F${projectBoard.number}`)
+  // Ignore issues already on the project board, if a board was specified
+  if (projectBoard) {
+    const ref = projectBoard.repo !== undefined
+      ? `${projectBoard.owner}%2F${projectBoard.repo}` : projectBoard.owner
+    query = query.concat(`+-project%3A${ref}%2F${projectBoard.number}`)
+  }
 
   console.log(`🔎 Searh query 🔎 ${query}`)
   return await octokit.request(`GET /search/issues?${query}`)
