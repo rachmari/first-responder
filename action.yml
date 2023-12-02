@@ -46,5 +46,5 @@ outputs:
   foundURLs:
     description: 'The URLs of the issues/PRs with your team pings that were found'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
