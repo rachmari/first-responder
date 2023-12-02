@@ -82,7 +82,7 @@ async function run () {
     }
   }
 
-  const urls = issues.data.items.map(item=>item.html_url)
+  const urls = issues.data.items.map(item => item.html_url)
 
   console.log('Items found: ' + urls)
 
