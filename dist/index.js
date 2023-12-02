@@ -51358,7 +51358,7 @@ async function run () {
   // const urls = issues.data.items.map(i=>i.html_url)
   const urls = ['https://github.com/github/docs-content/issues/12995', 'https://github.com/github/docs-content/issues/12996']
 
-  console.log('Items found: ' + urls)
+  console.log('Items found : ' + urls)
 
   core.setOutput('foundURLs', JSON.stringify(urls))
 }
