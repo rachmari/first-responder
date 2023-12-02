@@ -51,8 +51,8 @@ async function run () {
   }
 
   if (issues.data.items.length === 0) {
-    // todo uncomment
-    // return 'No new team pings. 💫🦄🌈🦩✨'
+    console.log('No new team pings. 💫🦄🌈🦩✨')
+    core.setOutput('foundURLs', JSON.stringify([]))
   }
 
   console.log(`🚨 Search query found ${issues.data.items.length} issues and prs. 🚨`)
@@ -82,11 +82,9 @@ async function run () {
     }
   }
 
-  // todo revert comment/hardcoded
-  // const urls = issues.data.items.map(i=>i.html_url)
-  const urls = ['https://github.com/github/docs-content/issues/12995', 'https://github.com/github/docs-content/issues/12996']
+  const urls = issues.data.items.map(item=>item.html_url)
 
-  console.log('Items found : ' + urls)
+  console.log('Items found: ' + urls)
 
   core.setOutput('foundURLs', JSON.stringify(urls))
 }
